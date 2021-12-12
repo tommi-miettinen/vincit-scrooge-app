@@ -3,31 +3,33 @@
   export let data;
 
   let linePath = [];
-
   let currentPos = 0;
 
-  $: {
-    if (data) {
-      let c = document.getElementById("canvas");
-      linePath = drawChart(data.prices, c);
-    }
-  }
+  $: data &&
+    (() => {
+      let c1 = document.getElementById("canvas");
+      currentPos = 0;
+      linePath = drawChart(data.prices, c1);
+    })();
 
-  $: {
-    if (linePath && currentPos !== 0) {
-      let c = document.getElementById("canvas2");
-      drawDot(linePath[currentPos].x, linePath[currentPos].y, c);
-    }
-  }
+  $: linePath.length &&
+    (() => {
+      let x = linePath[currentPos].x;
+      let y = linePath[currentPos].y;
+      let c2 = document.getElementById("canvas2");
+      drawDot(x, y, c2);
+    })();
 </script>
 
 <div class="canvas-container">
-  <span>{data && data.prices && data.prices[currentPos][1].toFixed(2)}€</span>
-  <span
-    >{data &&
-      data.prices &&
-      new Date(data.prices[currentPos][0]).toUTCString()}</span
-  >
+  {#if data}
+    <h1>
+      {data.prices[currentPos][1].toFixed(2)}€
+    </h1>
+    <span>
+      {new Date(data.prices[currentPos][0]).toLocaleDateString()}
+    </span>
+  {/if}
   <canvas
     class="canvas"
     id="canvas"
@@ -49,15 +51,56 @@
 />
 
 <style>
+  h1 {
+    position: absolute;
+    color: purple;
+    font-weight: 400;
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-right: auto;
+  }
+
+  span {
+    position: absolute;
+    width: 99%;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    color: purple;
+    font-weight: 400;
+    text-align: left;
+    bottom: 0;
+  }
+
   .canvas-container {
     position: relative;
-    height: 50%;
+    display: flex;
+    height: 55%;
     width: 100%;
-    border-bottom: 1px solid black;
   }
 
   .slider {
+    appearance: none;
+    border: 1px solid #c660ce;
+    height: 10px;
     width: 100%;
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #04aa6d; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+  }
+
+  .slider::-moz-range-thumb {
+    border-radius: 50%;
+    border: none;
+    width: 20px; /* Set a specific slider handle width */
+    height: 20px; /* Slider handle height */
+    background: black; /* Green background */
+    cursor: pointer; /* Cursor on hover */
   }
 
   .canvas {
