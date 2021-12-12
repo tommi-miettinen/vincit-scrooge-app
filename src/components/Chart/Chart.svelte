@@ -53,7 +53,7 @@
 <style>
   h1 {
     position: absolute;
-    color: purple;
+    color: white;
     font-weight: 400;
     margin-left: 20px;
     margin-top: 10px;
@@ -65,7 +65,7 @@
     width: 99%;
     margin-left: 5px;
     margin-bottom: 5px;
-    color: purple;
+    color: white;
     font-weight: 400;
     text-align: left;
     bottom: 0;
@@ -80,27 +80,28 @@
 
   .slider {
     appearance: none;
-    border: 1px solid #c660ce;
-    height: 10px;
+    background: #c576f6;
+    border: none;
+    height: 5px;
     width: 100%;
   }
 
   .slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Override default look */
+    -webkit-appearance: none;
     appearance: none;
-    width: 25px; /* Set a specific slider handle width */
-    height: 25px; /* Slider handle height */
-    background: #04aa6d; /* Green background */
-    cursor: pointer; /* Cursor on hover */
+    width: 20px;
+    height: 20px;
+    background: #c576f6;
+    cursor: pointer;
   }
 
   .slider::-moz-range-thumb {
     border-radius: 50%;
     border: none;
-    width: 20px; /* Set a specific slider handle width */
-    height: 20px; /* Slider handle height */
-    background: black; /* Green background */
-    cursor: pointer; /* Cursor on hover */
+    width: 15px;
+    height: 15px;
+    background: white;
+    cursor: pointer;
   }
 
   .canvas {

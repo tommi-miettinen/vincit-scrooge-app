@@ -73,10 +73,10 @@
 
 <style>
   .container {
-    color: purple;
+    color: white;
     border-radius: 3px;
-    box-shadow: 0px 0px 3px 0px purple;
-    background-color: white;
+    box-shadow: 0px 0px 10px 0px purple;
+    background-color: #202121;
     overflow-y: hidden;
     width: 40%;
     height: 430px;
@@ -86,17 +86,18 @@
 
   .btn {
     cursor: pointer;
-    background-color: purple;
-    border: 1px solid purple;
+    background: none;
+    border: 1px solid white;
     color: white;
     border-radius: 3px;
     width: 100px;
   }
 
   input {
-    color: purple;
+    color: white;
+    background: none;
     border-radius: 3px;
-    border: 1px solid purple;
+    border: 1px solid white;
   }
 
   .info-container {

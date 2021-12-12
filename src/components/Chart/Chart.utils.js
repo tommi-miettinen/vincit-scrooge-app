@@ -24,7 +24,7 @@ const drawChart = (data, c) => {
   });
 
   ctx.lineWidth = 1;
-  ctx.strokeStyle = "purple";
+  ctx.strokeStyle = "#c576f6";
   ctx.stroke();
 
   return linePath;
@@ -41,6 +41,7 @@ const drawDot = (x, y, c) => {
 
   ctx.clearRect(0, 0, width, height);
 
+  ctx.fillStyle = "white";
   ctx.moveTo(x, y);
   ctx.arc(x, y, 5, 0, Math.PI * 2, true);
   ctx.fill();
