@@ -1,4 +1,5 @@
 <script>
+  import moment from "moment";
   import { drawChart, drawDot } from "./Chart.utils";
   export let data;
 
@@ -8,7 +9,7 @@
   let date;
 
   $: if (data) price = data.prices[currentPos][1].toFixed(2);
-  $: if (data) date = new Date(data.prices[currentPos][0]).toLocaleDateString();
+  $: if (data) date = new Date(data.prices[currentPos][0]).toUTCString();
 
   $: if (data) {
     let c1 = document.getElementById("canvas");

@@ -69,10 +69,10 @@ const getDailyData = (data) => {
   const map = {};
 
   data.forEach((point) => {
-    let date = new Date(point[0]);
+    let date = new Date(point[0]).toISOString().split("T")[0];
 
-    if (!map.hasOwnProperty(date.toLocaleDateString())) {
-      map[date.toLocaleDateString()] = point;
+    if (!map.hasOwnProperty(date)) {
+      map[date] = point;
     }
   });
 

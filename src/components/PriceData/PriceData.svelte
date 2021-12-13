@@ -1,5 +1,7 @@
 <script>
+  import moment from "moment";
   import Chart from "../Chart/Chart.svelte";
+  import { onMount } from "svelte";
   import { fetchBitcoinChart } from "../../api/bitcoin";
   import {
     getDowntrendDays,
@@ -13,8 +15,8 @@
   let timeToBuy;
   let timeToSell;
   let highestVolume;
-  let fromDate;
-  let toDate;
+  let fromDate = moment().subtract(1, "months").format().split("T")[0];
+  let toDate = new Date().toISOString().split("T")[0];
 
   const fetchData = async () => {
     if (!fromDate || !toDate) return;
@@ -42,14 +44,25 @@
     timeToBuy = getLowestValueTuple(data.prices);
     timeToSell = getHighestValueTuple(data.prices);
   };
+  onMount(() => {
+    fetchData();
+  });
 </script>
 
 <div class="container">
   <Chart data={data && data.prices.length && data} />
   <div class="info-container">
     <div>
-      <input type="date" on:change={(e) => (fromDate = e.target.value)} />
-      <input type="date" on:change={(e) => (toDate = e.target.value)} />
+      <input
+        type="date"
+        bind:value={fromDate}
+        on:change={(e) => (fromDate = e.target.value)}
+      />
+      <input
+        type="date"
+        bind:value={toDate}
+        on:change={(e) => (toDate = e.target.value)}
+      />
       <button class="btn" on:click={fetchData}>Get Data</button>
     </div>
     {#if data && downtrend && timeToBuy && timeToSell}
