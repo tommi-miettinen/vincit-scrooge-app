@@ -92,9 +92,11 @@
   .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 20px;
-    height: 20px;
-    background: #c576f6;
+    border-radius: 50%;
+    border: none;
+    width: 15px;
+    height: 15px;
+    background: white;
     cursor: pointer;
   }
 
@@ -108,7 +110,6 @@
   }
 
   .canvas {
-    color: red;
     width: 100%;
     height: 100%;
   }

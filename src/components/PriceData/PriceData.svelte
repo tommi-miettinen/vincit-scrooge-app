@@ -17,7 +17,7 @@
   let toDate;
 
   const fetchData = async () => {
-    if (!fromDate && !toDate) return;
+    if (!fromDate || !toDate) return;
     if (fromDate > toDate) return;
 
     let formattedFromDate = new Date(fromDate).getTime() / 1000;
@@ -29,7 +29,7 @@
   };
 
   const parseData = () => {
-    if (!data) return;
+    if (!data || !data.prices.length) return;
 
     data = {
       ...data,
@@ -45,33 +45,31 @@
 </script>
 
 <div class="container">
-  <Chart {data} />
+  <Chart data={data && data.prices.length && data} />
   <div class="info-container">
     <div>
-      From: <input type="date" on:change={(e) => (fromDate = e.target.value)} />
-      To: <input type="date" on:change={(e) => (toDate = e.target.value)} />
+      <input type="date" on:change={(e) => (fromDate = e.target.value)} />
+      <input type="date" on:change={(e) => (toDate = e.target.value)} />
       <button class="btn" on:click={fetchData}>Get Data</button>
     </div>
-    {#if data}
-      <div class="info-text-container">
-        {#if !downtrend.onlyDowntrend}
-          <div>
-            <b>Lowest price </b>
-            {timeToBuy.day} / {timeToBuy.value}€
-          </div>
-          <div>
-            <b>Highest price </b>{timeToSell.day} / {timeToSell.value}€
-          </div>
-          <div>
-            <b>Highest volume </b>{highestVolume.day} / {highestVolume.value}€
-          </div>
-        {:else}
-          <div>You shouldnt buy or sell</div>
-        {/if}
+    {#if data && downtrend && timeToBuy && timeToSell}
+      {#if !downtrend.onlyDowntrend}
         <div>
-          <b>Longest downtrend </b>
-          {downtrend.length} days
+          <b>Lowest price </b>
+          {timeToBuy.day} / {timeToBuy.value}€
         </div>
+        <div>
+          <b>Highest price </b>{timeToSell.day} / {timeToSell.value}€
+        </div>
+        <div>
+          <b>Highest volume </b>{highestVolume.day} / {highestVolume.value}€
+        </div>
+      {:else}
+        <div>You shouldnt buy or sell</div>
+      {/if}
+      <div>
+        <b>Longest downtrend </b>
+        {downtrend.length} days
       </div>
     {/if}
   </div>
@@ -79,15 +77,17 @@
 
 <style>
   .container {
+    box-sizing: border-box;
+    overflow: hidden;
     color: white;
     border-radius: 3px;
     box-shadow: 0px 0px 10px 0px purple;
     background-color: #202121;
     overflow-y: hidden;
-    width: 40%;
-    height: 430px;
+    max-width: 600px;
+    height: 400px;
     margin: auto;
-    margin-top: 48px;
+    margin-top: 0px;
   }
 
   .btn {
@@ -96,7 +96,7 @@
     border: 1px solid white;
     color: white;
     border-radius: 3px;
-    width: 100px;
+    width: 80px;
   }
 
   input {
@@ -107,40 +107,9 @@
   }
 
   .info-container {
-    display: flex;
-    text-align: center;
-    flex-direction: column;
-    min-height: 50%;
-    width: 100%;
-    padding: 10px 0px;
-  }
-
-  .info-text-container {
-    text-align: left;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     padding: 10px;
-    padding-left: 20px;
-  }
-
-  @media only screen and (max-width: 1200px) {
-    .container {
-      width: 50%;
-    }
-  }
-
-  @media only screen and (max-width: 1000px) {
-    .container {
-      width: 60%;
-    }
-  }
-
-  @media only screen and (max-width: 800px) {
-    .container {
-      width: 100%;
-      margin-top: 0px;
-    }
+    display: flex;
+    text-align: left;
+    flex-direction: column;
   }
 </style>
