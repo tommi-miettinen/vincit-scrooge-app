@@ -4,30 +4,33 @@
 
   let linePath = [];
   let currentPos = 0;
+  let price;
+  let date;
 
-  $: data &&
-    (() => {
-      let c1 = document.getElementById("canvas");
-      currentPos = 0;
-      linePath = drawChart(data.prices, c1);
-    })();
+  $: if (data) price = data.prices[currentPos][1].toFixed(2);
+  $: if (data) date = new Date(data.prices[currentPos][0]).toLocaleDateString();
 
-  $: linePath.length &&
-    (() => {
-      let x = linePath[currentPos].x;
-      let y = linePath[currentPos].y;
-      let c2 = document.getElementById("canvas2");
-      drawDot(x, y, c2);
-    })();
+  $: if (data) {
+    let c1 = document.getElementById("canvas");
+    currentPos = 0;
+    linePath = drawChart(data.prices, c1);
+  }
+
+  $: if (linePath.length) {
+    let x = linePath[currentPos].x;
+    let y = linePath[currentPos].y;
+    let c2 = document.getElementById("canvas2");
+    drawDot(x, y, c2);
+  }
 </script>
 
 <div class="canvas-container">
   {#if data}
     <h1>
-      {data.prices[currentPos][1].toFixed(2)}€
+      {price}€
     </h1>
     <span>
-      {new Date(data.prices[currentPos][0]).toLocaleDateString()}
+      {date}
     </span>
   {/if}
   <canvas

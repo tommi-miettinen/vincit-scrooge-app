@@ -69,18 +69,14 @@ const getDailyData = (data) => {
   const map = {};
 
   data.forEach((point) => {
-    const date = new Date(point[0]);
+    let date = new Date(point[0]);
 
-    if (!map.hasOwnProperty(`${date.toLocaleDateString()}`)) {
-      map[`${date.toLocaleDateString()}`] = point;
+    if (!map.hasOwnProperty(date.toLocaleDateString())) {
+      map[date.toLocaleDateString()] = point;
     }
   });
 
   return Object.values(map);
-};
-
-const getHighestVolume = (data) => {
-  return getHighestValueTuple(data);
 };
 
 export {
@@ -88,5 +84,4 @@ export {
   getLowestValueTuple,
   getHighestValueTuple,
   getDailyData,
-  getHighestVolume,
 };

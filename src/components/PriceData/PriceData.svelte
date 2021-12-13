@@ -6,7 +6,6 @@
     getLowestValueTuple,
     getHighestValueTuple,
     getDailyData,
-    getHighestVolume,
   } from "./PriceData.utils";
 
   let data;
@@ -25,13 +24,18 @@
     let formattedToDate = new Date(toDate).getTime() / 1000;
 
     data = await fetchBitcoinChart(formattedFromDate, formattedToDate + 3600);
+
+    parseData();
+  };
+
+  const parseData = () => {
     data = {
       ...data,
       total_volumes: getDailyData(data.total_volumes),
       prices: getDailyData(data.prices),
     };
 
-    highestVolume = getHighestVolume(data.total_volumes);
+    highestVolume = getHighestValueTuple(data.total_volumes);
     downtrend = getDowntrendDays(data.prices);
     timeToBuy = getLowestValueTuple(data.prices);
     timeToSell = getHighestValueTuple(data.prices);
