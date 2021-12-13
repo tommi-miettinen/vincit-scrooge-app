@@ -15,7 +15,7 @@
   let timeToBuy;
   let timeToSell;
   let highestVolume;
-  let fromDate = moment().subtract(1, "months").format().split("T")[0];
+  let fromDate = moment().subtract(1, "years").format().split("T")[0];
   let toDate = new Date().toISOString().split("T")[0];
 
   const fetchData = async () => {

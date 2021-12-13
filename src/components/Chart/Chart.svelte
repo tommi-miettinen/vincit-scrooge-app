@@ -8,14 +8,27 @@
   let price;
   let date;
 
-  $: if (data) price = data.prices[currentPos][1].toFixed(2);
-  $: if (data) date = new Date(data.prices[currentPos][0]).toUTCString();
+  let height = window.innerHeight;
+  let width = window.innerWidth;
 
   $: if (data) {
-    let c1 = document.getElementById("canvas");
-    currentPos = 0;
-    linePath = drawChart(data.prices, c1);
+    price = data.prices[currentPos][1].toFixed(2);
+    date = moment(data.prices[currentPos][0]).format("LL");
   }
+
+  $: height,
+    width,
+    (() => {
+      if (data) {
+        let c1 = document.getElementById("canvas");
+        linePath = drawChart(data.prices, c1);
+      }
+    })();
+
+  $: data,
+    (() => {
+      if (data) currentPos = data.prices.length - 1;
+    })();
 
   $: if (linePath.length) {
     let x = linePath[currentPos].x;
@@ -23,6 +36,11 @@
     let c2 = document.getElementById("canvas2");
     drawDot(x, y, c2);
   }
+
+  window.addEventListener("resize", () => {
+    width = window.innerWidth;
+    height = window.innerHeight;
+  });
 </script>
 
 <div class="canvas-container">
