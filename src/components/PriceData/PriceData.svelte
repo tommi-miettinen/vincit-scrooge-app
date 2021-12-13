@@ -29,6 +29,8 @@
   };
 
   const parseData = () => {
+    if (!data) return;
+
     data = {
       ...data,
       total_volumes: getDailyData(data.total_volumes),
