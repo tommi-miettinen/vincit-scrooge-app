@@ -18,8 +18,6 @@
   let fromDate = moment().subtract(1, "years").format().split("T")[0];
   let toDate = new Date().toISOString().split("T")[0];
 
-  $: toDate, fromDate, fetchData();
-
   const fetchData = async () => {
     if (!fromDate || !toDate) return;
     if (fromDate > toDate) return;
@@ -27,7 +25,7 @@
     let formattedFromDate = new Date(fromDate).getTime() / 1000;
     let formattedToDate = new Date(toDate).getTime() / 1000;
 
-    data = await fetchBitcoinChart(formattedFromDate, formattedToDate + 3600);
+    data = await fetchBitcoinChart(formattedFromDate, formattedToDate + 7200);
 
     parseData();
   };
@@ -52,45 +50,55 @@
 </script>
 
 <div class="container">
-  <Chart data={data && data.prices.length && data} />
-  <div class="info-container">
-    <div>
-      <input
-        type="date"
-        bind:value={fromDate}
-        on:change={(e) => (fromDate = e.target.value)}
-      />
-      <input
-        type="date"
-        bind:value={toDate}
-        on:change={(e) => (toDate = e.target.value)}
-      />
-    </div>
-    {#if data && downtrend && timeToBuy && timeToSell}
-      {#if !downtrend.onlyDowntrend}
-        <div>
-          <b>Lowest price </b>
-          {timeToBuy.value}€ / {timeToBuy.day}
+  <div class="inner-container">
+    <Chart data={data && data.prices.length && data} />
+    <div class="info-container">
+      <div />
+      {#if data && downtrend && timeToBuy && timeToSell}
+        {#if !downtrend.onlyDowntrend}
+          <div style="margin:2px;">
+            <b>Lowest price </b>
+            {timeToBuy.value}€ / {timeToBuy.day}
+          </div>
+          <div style="margin:2px;">
+            <b>Highest price </b>{timeToSell.value}€ / {timeToSell.day}
+          </div>
+          <div style="margin:2px;">
+            <b>Highest volume </b>{(highestVolume.value / 1000000000).toFixed(
+              2
+            )}B€ / {highestVolume.day}
+          </div>
+        {:else}
+          <div style="margin:2px;">You shouldnt buy or sell</div>
+        {/if}
+        <div style="margin:2px;">
+          <b>Longest downtrend </b>
+          {downtrend.length} days
         </div>
-        <div>
-          <b>Highest price </b>{timeToSell.value}€ / {timeToSell.day}
-        </div>
-        <div>
-          <b>Highest volume </b>{highestVolume.value}€ / {highestVolume.day}
-        </div>
-      {:else}
-        <div>You shouldnt buy or sell</div>
       {/if}
-      <div>
-        <b>Longest downtrend </b>
-        {downtrend.length} days
-      </div>
-    {/if}
+    </div>
   </div>
+  <input
+    type="date"
+    bind:value={fromDate}
+    on:change={(e) => (fromDate = e.target.value)}
+  />
+  <input
+    type="date"
+    bind:value={toDate}
+    on:change={(e) => (toDate = e.target.value)}
+  />
+  <button on:click={fetchData}>Get Data</button>
 </div>
 
 <style>
   .container {
+    padding-bottom: 20px;
+    max-width: 600px;
+    margin: auto;
+  }
+
+  .inner-container {
     box-sizing: border-box;
     overflow: hidden;
     color: white;
@@ -103,25 +111,23 @@
     margin-top: 0px;
   }
 
-  .btn {
-    cursor: pointer;
+  input {
+    margin-top: 10px;
+    color: black;
     background: none;
-    border: 1px solid white;
-    color: white;
     border-radius: 3px;
-    width: 80px;
+    border: 1px solid black;
   }
 
-  input {
-    max-width: 122px;
-    color: white;
-    background: none;
+  button {
+    border: 1px solid black;
     border-radius: 3px;
-    border: 1px solid white;
+    cursor: pointer;
+    background: none;
   }
 
   .info-container {
-    padding: 10px;
+    padding: 20px;
     display: flex;
     text-align: left;
     flex-direction: column;

@@ -1,12 +1,14 @@
 <script>
   import moment from "moment";
   import { onMount } from "svelte";
-  import { drawChart, drawDot } from "./Chart.utils";
+  import { drawChart, drawDot, getClosestPointToMousePos } from "./Chart.utils";
   import { getHighestValueTuple } from "../PriceData/PriceData.utils";
   export let data;
 
   let linePath = [];
   let currentPos = 0;
+  let mousePos;
+
   let price;
   let date;
 
@@ -15,8 +17,6 @@
 
   let c1;
   let c2;
-
-  let mousePos;
 
   let chartMax;
 
@@ -30,7 +30,7 @@
     (() => {
       if (data) {
         c1 = document.getElementById("canvas");
-        chartMax = getHighestValueTuple(data.prices).value * 1.5;
+        chartMax = getHighestValueTuple(data.prices).value * 2;
         linePath = drawChart(data.prices, chartMax, c1);
       }
     })();
@@ -41,17 +41,16 @@
     })();
 
   $: linePath,
+    mousePos,
     (() => {
       if (linePath.length && mousePos) {
-        let idx = linePath.findIndex(
-          (point) => parseInt(point.x) === mousePos.x
-        );
+        let closest = getClosestPointToMousePos(linePath, mousePos);
+        let idx = linePath.findIndex((point) => point === closest);
 
-        if (idx !== -1) {
-          currentPos = idx;
-        }
-        let x = linePath[currentPos].x;
-        let y = linePath[currentPos].y;
+        if (idx !== -1) currentPos = idx;
+
+        let x = closest.x;
+        let y = closest.y;
         drawDot(x, y, c2);
       }
     })();
@@ -66,6 +65,14 @@
     return {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
+    };
+  };
+
+  const getTouchPos = (c, e) => {
+    const rect = c.getBoundingClientRect();
+    return {
+      x: e.touches[0].clientX - rect.left,
+      y: e.touches[0].clientY - rect.top,
     };
   };
 
@@ -91,6 +98,7 @@
   />
   <canvas
     on:mousemove={(e) => (mousePos = getMousePos(e.target, e))}
+    on:touchmove={(e) => (mousePos = getTouchPos(e.target, e))}
     class="canvas"
     id="canvas2"
     style="position: absolute; left: 0; top: 0; z-index: 1;"

@@ -47,4 +47,19 @@ const drawDot = (x, y, c) => {
   ctx.fill();
 };
 
-export { drawChart, drawDot };
+const getClosestPointToMousePos = (arr, mousePos) => {
+  let closest = arr[0];
+  let i = 1;
+
+  while (i < arr.length) {
+    let cur = Math.abs(arr[i].x - mousePos.x);
+    let prev = Math.abs(arr[i - 1].x - mousePos.x);
+    if (cur < prev) {
+      closest = arr[i];
+    }
+    i = i + 1;
+  }
+  return closest;
+};
+
+export { drawChart, drawDot, getClosestPointToMousePos };
