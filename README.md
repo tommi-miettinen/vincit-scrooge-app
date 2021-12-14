@@ -1,4 +1,4 @@
-![kuva](https://user-images.githubusercontent.com/63008431/145826178-3d4dabc6-53a5-4088-80bd-7951b9d7da32.png)
+![kuva](https://user-images.githubusercontent.com/63008431/146063959-bfc41f53-4c51-4a7a-8029-f26778778b27.png)
 
 Vincit rising star pre-assignment made with Svelte.js
 
