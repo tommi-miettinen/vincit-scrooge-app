@@ -1,6 +1,8 @@
 <script>
   import moment from "moment";
+  import { onMount } from "svelte";
   import { drawChart, drawDot } from "./Chart.utils";
+  import { getHighestValueTuple } from "../PriceData/PriceData.utils";
   export let data;
 
   let linePath = [];
@@ -11,6 +13,13 @@
   let height = window.innerHeight;
   let width = window.innerWidth;
 
+  let c1;
+  let c2;
+
+  let mousePos;
+
+  let chartMax;
+
   $: if (data) {
     price = data.prices[currentPos][1].toFixed(2);
     date = moment(data.prices[currentPos][0]).format("LL");
@@ -20,8 +29,9 @@
     width,
     (() => {
       if (data) {
-        let c1 = document.getElementById("canvas");
-        linePath = drawChart(data.prices, c1);
+        c1 = document.getElementById("canvas");
+        chartMax = getHighestValueTuple(data.prices).value * 1.5;
+        linePath = drawChart(data.prices, chartMax, c1);
       }
     })();
 
@@ -30,16 +40,38 @@
       if (data) currentPos = data.prices.length - 1;
     })();
 
-  $: if (linePath.length) {
-    let x = linePath[currentPos].x;
-    let y = linePath[currentPos].y;
-    let c2 = document.getElementById("canvas2");
-    drawDot(x, y, c2);
-  }
+  $: linePath,
+    (() => {
+      if (linePath.length && mousePos) {
+        let idx = linePath.findIndex(
+          (point) => parseInt(point.x) === mousePos.x
+        );
+
+        if (idx !== -1) {
+          currentPos = idx;
+        }
+        let x = linePath[currentPos].x;
+        let y = linePath[currentPos].y;
+        drawDot(x, y, c2);
+      }
+    })();
 
   window.addEventListener("resize", () => {
     width = window.innerWidth;
     height = window.innerHeight;
+  });
+
+  const getMousePos = (c, e) => {
+    const rect = c.getBoundingClientRect();
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    };
+  };
+
+  onMount(() => {
+    c1 = document.getElementById("canvas");
+    c2 = document.getElementById("canvas2");
   });
 </script>
 
@@ -58,19 +90,12 @@
     style="position: absolute; left: 0; top: 0; z-index: 0;"
   />
   <canvas
+    on:mousemove={(e) => (mousePos = getMousePos(e.target, e))}
     class="canvas"
     id="canvas2"
     style="position: absolute; left: 0; top: 0; z-index: 1;"
   />
 </div>
-<input
-  type="range"
-  min={0}
-  max={linePath.length - 1}
-  value={currentPos}
-  on:input={(e) => (currentPos = e.target.value)}
-  class="slider"
-/>
 
 <style>
   h1 {
@@ -79,53 +104,24 @@
     font-weight: 400;
     margin-left: 20px;
     margin-top: 10px;
-    margin-right: auto;
   }
 
   span {
     position: absolute;
     width: 99%;
-    margin-left: 5px;
-    margin-bottom: 5px;
+    margin-top: 20px;
+    margin-left: -10px;
     color: white;
     font-weight: 400;
-    text-align: left;
-    bottom: 0;
+    text-align: right;
   }
 
   .canvas-container {
+    cursor: pointer;
     position: relative;
     display: flex;
-    height: 55%;
+    min-height: 200px;
     width: 100%;
-  }
-
-  .slider {
-    appearance: none;
-    background: #c576f6;
-    border: none;
-    height: 5px;
-    width: 100%;
-  }
-
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    border-radius: 50%;
-    border: none;
-    width: 15px;
-    height: 15px;
-    background: white;
-    cursor: pointer;
-  }
-
-  .slider::-moz-range-thumb {
-    border-radius: 50%;
-    border: none;
-    width: 15px;
-    height: 15px;
-    background: white;
-    cursor: pointer;
   }
 
   .canvas {

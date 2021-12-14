@@ -18,6 +18,8 @@
   let fromDate = moment().subtract(1, "years").format().split("T")[0];
   let toDate = new Date().toISOString().split("T")[0];
 
+  $: toDate, fromDate, fetchData();
+
   const fetchData = async () => {
     if (!fromDate || !toDate) return;
     if (fromDate > toDate) return;
@@ -63,19 +65,18 @@
         bind:value={toDate}
         on:change={(e) => (toDate = e.target.value)}
       />
-      <button class="btn" on:click={fetchData}>Get Data</button>
     </div>
     {#if data && downtrend && timeToBuy && timeToSell}
       {#if !downtrend.onlyDowntrend}
         <div>
           <b>Lowest price </b>
-          {timeToBuy.day} / {timeToBuy.value}€
+          {timeToBuy.value}€ / {timeToBuy.day}
         </div>
         <div>
-          <b>Highest price </b>{timeToSell.day} / {timeToSell.value}€
+          <b>Highest price </b>{timeToSell.value}€ / {timeToSell.day}
         </div>
         <div>
-          <b>Highest volume </b>{highestVolume.day} / {highestVolume.value}€
+          <b>Highest volume </b>{highestVolume.value}€ / {highestVolume.day}
         </div>
       {:else}
         <div>You shouldnt buy or sell</div>
@@ -98,7 +99,6 @@
     background-color: #202121;
     overflow-y: hidden;
     max-width: 600px;
-    height: 400px;
     margin: auto;
     margin-top: 0px;
   }
@@ -113,6 +113,7 @@
   }
 
   input {
+    max-width: 122px;
     color: white;
     background: none;
     border-radius: 3px;

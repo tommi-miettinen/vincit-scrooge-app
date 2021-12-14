@@ -1,4 +1,4 @@
-const drawChart = (data, c) => {
+const drawChart = (data, chartMax, c) => {
   let ctx = c.getContext("2d");
 
   let width = +getComputedStyle(c).getPropertyValue("width").slice(0, -2);
@@ -9,7 +9,6 @@ const drawChart = (data, c) => {
 
   let x = 0;
   let y = 0;
-  let chartMax = 100000;
   let xIncrement = width / data.length;
 
   let linePath = [];
@@ -18,7 +17,8 @@ const drawChart = (data, c) => {
     x = x + xIncrement;
     if (index === 0) x = 0;
     if (index === data.length - 1) x = width;
-    y = height - (pricePoint[1] / chartMax) * height;
+    //minus 10 to add 10px "padding-bottom"
+    y = height - (pricePoint[1] / chartMax) * height - 10;
     ctx.lineTo(x, y);
     linePath.push({ x, y });
   });
