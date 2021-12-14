@@ -78,23 +78,26 @@
       {/if}
     </div>
   </div>
-  <input
-    type="date"
-    bind:value={fromDate}
-    on:change={(e) => (fromDate = e.target.value)}
-  />
-  <input
-    type="date"
-    bind:value={toDate}
-    on:change={(e) => (toDate = e.target.value)}
-  />
-  <button on:click={fetchData}>Get Data</button>
+  <div class="input-container">
+    <input
+      type="date"
+      bind:value={fromDate}
+      on:change={(e) => (fromDate = e.target.value)}
+    />
+    <input
+      type="date"
+      bind:value={toDate}
+      on:change={(e) => (toDate = e.target.value)}
+    />
+    <button on:click={fetchData}>Get Data</button>
+  </div>
 </div>
 
 <style>
   .container {
     padding-bottom: 20px;
     max-width: 600px;
+    min-height: 425px;
     margin: auto;
   }
 
@@ -103,7 +106,6 @@
     overflow: hidden;
     color: white;
     border-radius: 3px;
-    box-shadow: 0px 0px 10px 0px purple;
     background-color: #202121;
     overflow-y: hidden;
     max-width: 600px;
@@ -112,24 +114,37 @@
   }
 
   input {
-    margin-top: 10px;
+    width: 33%;
     color: black;
     background: none;
     border-radius: 3px;
+    margin-right: 5px;
     border: 1px solid black;
+    height: 40px;
   }
 
   button {
+    color: black;
+    background-color: white;
     border: 1px solid black;
     border-radius: 3px;
+    height: 40px;
+    width: 33%;
     cursor: pointer;
-    background: none;
   }
 
   .info-container {
+    margin: auto;
+    width: 100%;
     padding: 20px;
+    min-height: 100px;
     display: flex;
-    text-align: left;
     flex-direction: column;
+    justify-content: center;
+  }
+
+  .input-container {
+    display: flex;
+    padding: 10px 0px;
   }
 </style>
